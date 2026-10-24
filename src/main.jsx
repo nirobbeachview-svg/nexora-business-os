@@ -4,6 +4,7 @@ import {LayoutDashboard,Users,ShoppingBag,Package,Receipt,CheckSquare,BarChart3,
 import {InternationalHub,TagMaker,ScanCenter,HardwareCenter,ReceiptStudio} from './advanced.jsx';
 import {supabase} from './supabase.js';
 import {AuthScreen,WorkspaceSetup} from './auth.jsx';
+import {LiveCustomers,LiveInventory,LivePOS} from './live-records.jsx';
 import {AreaChart,Area,XAxis,CartesianGrid,Tooltip,ResponsiveContainer} from 'recharts';
 import './style.css';
 const chart=[{d:'Mon',r:2400,e:1400},{d:'Tue',r:3100,e:1750},{d:'Wed',r:2750,e:1600},{d:'Thu',r:3900,e:2100},{d:'Fri',r:3400,e:1850},{d:'Sat',r:4650,e:2400},{d:'Sun',r:4250,e:2200}];
