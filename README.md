@@ -19,11 +19,13 @@ A responsive React + Vite business workspace with Supabase authentication and a 
 - **Product scanner:** device camera where browser BarcodeDetector is supported, keyboard-wedge USB/Bluetooth scanners, manual barcode entry, and adding scanned products to the shared catalog
 - **POS:** loads live workspace products; records a sale, sale lines, inventory movements and an audit entry in one database transaction; validates stock and prevents duplicate product IDs; allocates receipt numbers atomically
 - **Invoices:** saves invoice drafts, customer linkage, invoice line, currency, totals and an audit entry
+- **Expenses:** persistent workspace expense ledger with category, vendor/payee, amount, date, currency and role-restricted writes
 - **Tasks:** saved to the workspace and synchronized when marked complete
 - **International settings:** Bangladesh (BDT), Saudi Arabia (SAR), US (USD), UK (GBP), UAE (AED), India (INR), and EUR; workspace currency, language/locale, time zone, tax-rate and address settings persist
 - **Tag maker:** loads live products and generates CODE128 barcode labels with editable product details, print copies, and browser print/PDF support
 - **Receipt studio:** custom receipt/invoice template with saved business details, title, footer, tax-rate setting and print/PDF
-- **Hardware center:** scanner input test, system print dialog, notes and hardware compatibility guidance
+- **Hardware center:** scanner input test, system print dialog, workspace-saved notes and hardware compatibility guidance
+- **Dashboard & analytics:** live aggregates from recorded sales, expenses and customers, plus a seven-day sales/expense chart
 
 ## Backend project
 - Supabase project: `nexora-business-os`
@@ -46,7 +48,7 @@ npm run build
 ## Important production boundaries
 - **No live payment processing:** card and mobile-money choices only record the payment method. Connect a payment provider after choosing the target market and merchant account.
 - **Tax compliance is not automatic:** tax rates are editable workspace settings. Confirm VAT/GST, Saudi ZATCA e-invoicing, invoice numbering, required QR/barcode fields, retention and other jurisdiction-specific obligations with a qualified local professional before using this for legal invoices.
-- **Dashboard demo values:** revenue chart samples and some overview metrics are still demonstration data and should be replaced with verified aggregate queries before business decisions.
+- **Dashboard scope:** headline figures and the seven-day chart use workspace records. Sales collected reflects records marked paid; POS 'card' and mobile selections still only record a method and do not verify external settlement.
 - **Nori is still a demo assistant:** live AI needs a secure server-side provider integration and usage limits.
 - **Hardware support varies:** browser print dialog is broadly available, but direct ESC/POS printing, automatic cash-drawer kick, scale integration, customer displays and payment terminals require compatible model-specific SDKs or a local bridge.
 - **Offline mode and multi-branch sync:** not yet implemented.
