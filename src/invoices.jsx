@@ -5,11 +5,12 @@ import './invoices.css';
 const today=()=>new Date().toISOString().slice(0,10);
 const fmt=(v,c)=>{try{return new Intl.NumberFormat(undefined,{style:'currency',currency:c,maximumFractionDigits:2}).format(Number(v)||0)}catch{return c+' '+(Number(v)||0).toFixed(2)}};
 const blank=()=>({description:'Product or service',quantity:1,unit_price:0,discount_amount:0,tax_rate:0});
-export default function InvoicesWorkspace({workspace,currency='BDT',notify=()=>{}}){
+export default function InvoicesWorkspace({workspace,currency='BDT',notify=()=>{},startCreate=false,onStarted=()=>{}}){
  const [rows,Srows]=useState([]),[customers,Sc]=useState([]),[loading,Sl]=useState(true),[saving,Ssave]=useState(false),[creating,Screate]=useState(false),[search,Ssearch]=useState(''),[status,Sstatus]=useState('all'),[selected,Ssel]=useState(null),[style,Sstyle]=useState('classic');
  const [mode,Smode]=useState('existing'),[customerId,Scid]=useState(''),[customer,Scustomer]=useState({full_name:'',phone:'',email:'',tax_number:'',address:'',notes:''}),[meta,Smeta]=useState({issue_date:today(),due_date:'',terms:'Payment due by the due date.',footer:'Thank you for your business.'}),[items,Si]=useState([blank()]);
  const load=async()=>{Sl(true);const [a,b]=await Promise.all([supabase.from('invoices').select('*,customers(id,full_name,phone,email,tax_number,address),invoice_items(*)').eq('workspace_id',workspace.id).order('created_at',{ascending:false}),supabase.from('customers').select('id,full_name,phone,email,tax_number,address').eq('workspace_id',workspace.id).order('full_name')]);if(a.error)notify('Invoice list failed: '+a.error.message);else Srows(a.data||[]);if(b.error)notify('Customer list failed: '+b.error.message);else Sc(b.data||[]);Sl(false)};
  useEffect(()=>{if(workspace?.id)load()},[workspace?.id]);
+ useEffect(()=>{if(startCreate){Screate(true);onStarted()}},[startCreate,onStarted]);
  const totals=useMemo(()=>items.reduce((t,x)=>{let base=Math.max(0,+x.quantity||0)*Math.max(0,+x.unit_price||0),d=Math.min(base,Math.max(0,+x.discount_amount||0)),tax=Math.max(0,Math.min(100,+x.tax_rate||0));t.subtotal+=base;t.discount+=d;t.tax+=(base-d)*tax/100;t.total+=base-d+(base-d)*tax/100;return t},{subtotal:0,discount:0,tax:0,total:0}),[items]);
  const reset=()=>{Screate(false);Ssel(null);Smode('existing');Scid('');Scustomer({full_name:'',phone:'',email:'',tax_number:'',address:'',notes:''});Smeta({issue_date:today(),due_date:'',terms:'Payment due by the due date.',footer:'Thank you for your business.'});Si([blank()])};
  const setItem=(i,k,v)=>Si(old=>old.map((x,j)=>i===j?{...x,[k]:v}:x));
